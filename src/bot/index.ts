@@ -4,7 +4,9 @@ import { hydrateReply, parseMode } from '@grammyjs/parse-mode'
 import type { BotConfig, StorageAdapter } from 'grammy'
 import { Bot as TelegramBot } from 'grammy'
 import { sequentialize } from '@grammyjs/runner'
-import { welcomeFeature } from '#root/bot/features/welcome.js'
+import { startFuture } from '#root/bot/features/start.js'
+import { getGeoFuture } from '#root/bot/features/get-geo.js'
+import { settingsFuture } from '#root/bot/features/settings.js'
 import { adminFeature } from '#root/bot/features/admin.js'
 import { languageFeature } from '#root/bot/features/language.js'
 import { unhandledFeature } from '#root/bot/features/unhandled.js'
@@ -60,7 +62,9 @@ export function createBot(token: string, dependencies: Dependencies, options: Op
   protectedBot.use(i18n)
 
   // Handlers
-  protectedBot.use(welcomeFeature)
+  protectedBot.use(startFuture)
+  protectedBot.use(getGeoFuture)
+  protectedBot.use(settingsFuture)
   protectedBot.use(adminFeature)
   if (isMultipleLocales)
     protectedBot.use(languageFeature)
