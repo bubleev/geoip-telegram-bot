@@ -1,21 +1,15 @@
 // main-menu.ts
-import { Keyboard } from 'grammy'
+import { InlineKeyboard } from 'grammy'
 import type { Context } from '#root/bot/context.js'
 
-export const BUTTON_TEXTS = {
-  IP_LOOKUP: (ctx: Context) => `🔍 ${ctx.t('ip-lookup')}`,
-  SETTINGS: (ctx: Context) => `⚙️ ${ctx.t('settings')}`,
-}
-
-export async function createMainMenuKeyboard(ctx: Context) {
-  const buttons = [
-    { text: BUTTON_TEXTS.IP_LOOKUP(ctx) },
-    { text: BUTTON_TEXTS.SETTINGS(ctx) },
+export async function createMainKeyboard(ctx: Context) {
+  const MENU_BUTTONS = [
+    { text: `🔍 ${ctx.t('ip-lookup')}`, callback_data: 'ip-lookup' },
+    { text: `⚙️ ${ctx.t('settings')}`, callback_data: 'settings' },
   ]
 
-  const buttonRows = buttons.map(button =>
-    [Keyboard.text(button.text)],
-  )
+  const buttonRows = MENU_BUTTONS
+    .map(btn => InlineKeyboard.text(btn.text, btn.callback_data))
 
-  return Keyboard.from(buttonRows).resized()
+  return InlineKeyboard.from([buttonRows])
 }
