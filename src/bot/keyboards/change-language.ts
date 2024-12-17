@@ -4,6 +4,7 @@ import { changeLanguageData } from '#root/bot/callback-data/change-language.js'
 import type { Context } from '#root/bot/context.js'
 import { i18n } from '#root/bot/i18n.js'
 import { chunk } from '#root/bot/helpers/keyboard.js'
+import { createBackButton } from '#root/bot/keyboards/back-button.js'
 
 export async function createChangeLanguageKeyboard(ctx: Context) {
   const currentLocaleCode = await ctx.i18n.getLocale()
@@ -14,15 +15,15 @@ export async function createChangeLanguageKeyboard(ctx: Context) {
     return `${isActive ? '✅ ' : ''}${ISO6391.getNativeName(code)}`
   }
 
-  return InlineKeyboard.from(
-    chunk(
-      i18n.locales.map(localeCode => ({
-        text: getLabel(localeCode),
-        callback_data: changeLanguageData.pack({
-          code: localeCode,
-        }),
-      })),
-      2,
-    ),
-  )
+  const languageButtons = i18n.locales.map(localeCode => ({
+    text: getLabel(localeCode),
+    callback_data: changeLanguageData.pack({
+      code: localeCode,
+    }),
+  }))
+
+  return InlineKeyboard.from([
+    ...chunk(languageButtons, 2),
+    [createBackButton(ctx, 'settings')],
+  ])
 }
