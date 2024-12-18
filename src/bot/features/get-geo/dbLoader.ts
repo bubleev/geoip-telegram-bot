@@ -3,7 +3,6 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import * as mmdb from 'mmdb-lib'
 import type { CityResponse } from 'mmdb-lib'
-import { logger } from '#root/logger.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)

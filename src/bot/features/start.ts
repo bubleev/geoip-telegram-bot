@@ -3,8 +3,6 @@ import type { Context } from '#root/bot/context.js'
 import { logHandle } from '#root/bot/helpers/logging.js'
 import { createMainKeyboard } from '#root/bot/keyboards/main-menu.js'
 import { createSettingsKeyboard } from '#root/bot/keyboards/settings.js'
-import { parseIps } from '#root/bot/helpers/parse-ips.js'
-import { createSendMoreKeyboard, extractIpsFromText } from '#root/bot/keyboards/get-geo.js'
 
 const composer = new Composer<Context>()
 

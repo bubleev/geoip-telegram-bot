@@ -1,5 +1,4 @@
 import { Composer } from 'grammy'
-import type { MessageId } from 'grammy/types'
 import { getCountryCode } from './get-country-code.js'
 import type { Context } from '#root/bot/context.ts'
 import { logHandle } from '#root/bot/helpers/logging.js'
