@@ -1,32 +1,83 @@
 import { Composer } from 'grammy'
-import { CountryResponse } from 'mmdb-lib'
+import type { MessageId } from 'grammy/types'
 import { getCountryCode } from './get-country-code.js'
 import type { Context } from '#root/bot/context.ts'
 import { logHandle } from '#root/bot/helpers/logging.js'
 import { getFlagEmoji } from '#root/bot/helpers/country-flag.js'
+import { parseIps } from '#root/bot/helpers/parse-ips.js'
+import { createSendMoreKeyboard } from '#root/bot/keyboards/get-geo.js'
 
 const composer = new Composer<Context>()
 
 const feature = composer.chatType('private')
 
 feature.command('get', logHandle('command-get'), async (ctx) => {
-  const msg = ctx.match?.trim() // Получаем аргумент команды (после /get)
+  // const msg = ctx.match?.trim()
 
-  if (!msg) {
-    return ctx.reply('Пожалуйста, укажите IP-адрес после команды.')
+  // if (!msg) {
+  //   return ctx.reply('Пожалуйста, укажите IP-адрес после команды.')
+  // }
+
+  // const response = getCountryCode(msg)
+  // const city = response?.city
+  // const country = response?.country
+
+  // const flag = getFlagEmoji(country?.iso_code as string)
+
+  // let reply = 'Not Found'
+  // if (city)
+  //   reply = `${flag} ${country?.iso_code} ${city.names.ru} ${msg}`
+
+  return ctx.reply('get', { parse_mode: 'MarkdownV2' })
+})
+
+feature.callbackQuery('ip-lookup', async (ctx) => {
+  const promptMessage = await ctx.reply('Пришлите до 50 IP-адресов одним сообщением.')
+  await ctx.answerCallbackQuery()
+
+  // Сохраняем ID сообщения для последующего удаления
+  ctx.session.promptMessageId = promptMessage.message_id
+
+  ctx.session.waitingForIps = true
+})
+
+feature.on('message:text', async (ctx) => {
+  if (ctx.session?.waitingForIps) {
+    await ctx.api.deleteMessage(ctx.chat.id, ctx.session.promptMessageId as number)
+
+    const loadingReply = await ctx.reply('⏳ Проверяем IP-адреса...')
+
+    ctx.session.waitingForMessage = true
+
+    const input = ctx.message.text
+
+    let ips = parseIps(input)
+
+    if (ips.length > 50) {
+      ips = ips.slice(0, 50)
+    }
+    ctx.session.waitingForIps = false
+
+    const replies = await Promise.all(ips.map(async (ip) => {
+      const response = await getCountryCode(ip)
+      const city = response?.city
+      const country = response?.country
+
+      const flag = getFlagEmoji(country?.iso_code as string)
+
+      let reply = `<s>${ip}</s>`
+      if (country)
+        reply = `${flag} ${country?.iso_code} ${city?.names.ru || ''} ${ip}`
+
+      return reply
+    }))
+
+    const responseMessage = replies.join('\n') || 'IP-адреса не распознаны.'
+    await ctx.api.editMessageText(ctx.chat.id, loadingReply.message_id, `Полученные IP-адреса (Ограничены до 50):\n\n${responseMessage}`, {
+      parse_mode: 'HTML',
+      reply_markup: await createSendMoreKeyboard(ctx),
+    })
   }
-
-  const response = getCountryCode(msg)
-  const city = response?.city
-  const country = response?.country
-
-  const flag = getFlagEmoji(country?.iso_code as string)
-
-  let reply = 'Not Found'
-  if (city)
-    reply = `${flag}  \`${msg} | ${country?.names.ru} | ${city.names.ru}\``
-
-  return ctx.reply(reply, { parse_mode: 'MarkdownV2' })
 })
 
 export { composer as getGeoFuture }

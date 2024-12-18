@@ -3,6 +3,8 @@ import type { Context } from '#root/bot/context.js'
 import { logHandle } from '#root/bot/helpers/logging.js'
 import { createMainKeyboard } from '#root/bot/keyboards/main-menu.js'
 import { createSettingsKeyboard } from '#root/bot/keyboards/settings.js'
+import { parseIps } from '#root/bot/helpers/parse-ips.js'
+import { createSendMoreKeyboard, extractIpsFromText } from '#root/bot/keyboards/get-geo.js'
 
 const composer = new Composer<Context>()
 
@@ -20,15 +22,16 @@ feature.callbackQuery('start', async (ctx) => {
   })
 })
 
+feature.callbackQuery('back-to-start', logHandle('command-back-to-start'), async (ctx) => {
+  await ctx.reply(ctx.t('start'), {
+    reply_markup: await createMainKeyboard(ctx),
+  })
+  return ctx.answerCallbackQuery()
+})
+
 feature.callbackQuery('settings', async (ctx) => {
   return ctx.editMessageText(ctx.t('settings'), {
     reply_markup: await createSettingsKeyboard(ctx),
-  })
-})
-
-feature.callbackQuery('ip-lookup', async (ctx) => {
-  return ctx.editMessageText(ctx.t('ip-lookup'), {
-    reply_markup: await createMainKeyboard(ctx),
   })
 })
 

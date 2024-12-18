@@ -8,6 +8,9 @@ import type { Logger } from '#root/logger.js'
 import type { Config } from '#root/config.js'
 
 export interface SessionData {
+  waitingForIps?: boolean
+  waitingForMessage?: boolean
+  promptMessageId?: number
   // field?: string;
 }
 

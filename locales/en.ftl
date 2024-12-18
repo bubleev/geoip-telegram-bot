@@ -24,5 +24,5 @@ back = Back
 # Settings
 settings_language = Language change
 
-
-
+## GEO Menu
+send_more = Check more

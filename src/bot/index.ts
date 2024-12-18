@@ -1,8 +1,8 @@
 import { autoChatAction } from '@grammyjs/auto-chat-action'
 import { hydrate } from '@grammyjs/hydrate'
 import { hydrateReply, parseMode } from '@grammyjs/parse-mode'
-import type { BotConfig, StorageAdapter } from 'grammy'
-import { Bot as TelegramBot } from 'grammy'
+import type { BotConfig, SessionOptions, StorageAdapter } from 'grammy'
+import { MemorySessionStorage, Bot as TelegramBot } from 'grammy'
 import { sequentialize } from '@grammyjs/runner'
 import { startFuture } from '#root/bot/features/start.js'
 import { getGeoFuture } from '#root/bot/features/get-geo/get-geo.js'
@@ -29,8 +29,8 @@ interface Options {
   botConfig?: Omit<BotConfig<Context>, 'ContextConstructor'>
 }
 
-function getSessionKey(ctx: Omit<Context, 'session'>) {
-  return ctx.chat?.id.toString()
+function getSessionKey(ctx: any): string | undefined {
+  return (ctx as Context).chat?.id?.toString()
 }
 
 export function createBot(token: string, dependencies: Dependencies, options: Options = {}) {
@@ -58,7 +58,14 @@ export function createBot(token: string, dependencies: Dependencies, options: Op
   protectedBot.use(autoChatAction(bot.api))
   protectedBot.use(hydrateReply)
   protectedBot.use(hydrate())
-  protectedBot.use(session({ getSessionKey, storage: options.botSessionStorage }))
+
+  const sessionOptions: SessionOptions<SessionData, Context> = {
+    initial: (): SessionData => ({ waitingForIps: false, waitingForMessage: false, promptMessageId: 0 }),
+    storage: options.botSessionStorage || new MemorySessionStorage<SessionData>(),
+    getSessionKey: ctx => ctx.chat?.id?.toString(),
+  }
+
+  protectedBot.use(session(sessionOptions))
   protectedBot.use(i18n)
 
   // Handlers

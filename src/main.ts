@@ -2,6 +2,7 @@
 
 import process from 'node:process'
 import { type RunnerHandle, run } from '@grammyjs/runner'
+import { loadDatabase } from '#root/bot/features/get-geo/dbLoader.js'
 import { logger } from '#root/logger.js'
 import { createBot } from '#root/bot/index.js'
 import type { PollingConfig, WebhookConfig } from '#root/config.js'
@@ -25,6 +26,17 @@ async function startPolling(config: PollingConfig) {
     bot.init(),
     bot.api.deleteWebhook(),
   ])
+
+  try {
+    await loadDatabase()
+    logger.info({
+      msg: 'GeoLite2 database successfully loaded',
+    })
+  }
+  catch (error) {
+    logger.error('Failed to start bot due to database error:', error)
+    process.exit(1)
+  }
 
   // start bot
   runner = run(bot, {

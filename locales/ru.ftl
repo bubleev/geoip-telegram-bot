@@ -24,3 +24,6 @@ back = Назад
 
 # Settings
 settings_language = Сменить язык
+
+## GEO Menu
+send_more = Отправить ещё
