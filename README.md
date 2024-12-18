@@ -1,8 +1,8 @@
-<h1 align="center">🤖 Telegram Bot Template</h1>
+<h1 align="center">🤖 GeoIp Bote</h1>
 
 <img align="right" width="35%" src="https://github.com/bot-base/telegram-bot-template/assets/26162440/c4371683-3e99-4b1c-ae8e-11ccbea78f4b">
 
-Bot starter template based on [grammY](https://grammy.dev/) bot framework.
+Bot based on [grammY](https://grammy.dev/) bot framework.
 
 ## Features
 
@@ -25,21 +25,7 @@ Bot starter template based on [grammY](https://grammy.dev/) bot framework.
 
 ## Usage
 
-Follow these steps to set up and run your bot using this template:
-
-1. **Create a New Repository**
-
-    Start by creating a new repository using this template. You can do this by clicking [here](https://github.com/bot-base/telegram-bot-template/generate).
-
-2. **Environment Variables Setup**
-
-    Create an environment variables file by copying the provided example file:
-     ```bash
-     cp .env.example .env
-     ```
-    Open the newly created `.env` file and set the `BOT_TOKEN` environment variable.
-
-3. **Launching the Bot**
+**Launching the Bot**
 
     You can run your bot in both development and production modes.
 
