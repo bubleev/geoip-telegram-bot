@@ -1,4 +1,4 @@
-<h1 align="center">🤖 GeoIp Bote</h1>
+<h1 align="center">🤖 GeoIp Bot</h1>
 
 <img align="right" width="35%" src="https://github.com/bot-base/telegram-bot-template/assets/26162440/c4371683-3e99-4b1c-ae8e-11ccbea78f4b">
 
