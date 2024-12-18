@@ -2,7 +2,6 @@
 start-command-description = Запустить бота
 language-command-description = Сменить язык
 setcommands-command-description = Установить команды
-settings-command-description = Настройки
 
 ## Welcome Feature
 start = Добро пожаловать в GeoIP Bot!

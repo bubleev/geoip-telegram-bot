@@ -66,7 +66,7 @@ feature.on('message:text', async (ctx) => {
 
       let reply = `<s>${ip}</s>`
       if (country)
-        reply = `${flag} ${country?.iso_code} ${city?.names.ru || ''} ${ip}`
+        reply = `${flag} ${country?.iso_code} ${city?.names.ru || ''} <code>${ip}</code>`
 
       return reply
     }))
