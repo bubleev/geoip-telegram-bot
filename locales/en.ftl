@@ -30,3 +30,6 @@ await_ips = Send up to 50 IP addresses in a single message
 checking_ips = Checking IP addresses...
 geo_error_msg = Addresses not recognized
 geo_result_msg = Retrieved IP addresses (Max. 50)
+geo_filters = Filters
+geo_filters_country = Countries
+geo_filters_city = Cities

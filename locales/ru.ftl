@@ -30,3 +30,6 @@ await_ips = Пришлите до 50 IP-адресов одним сообщен
 checking_ips = Проверяем IP-адреса...
 geo_error_msg = Адреса не распознаны
 geo_result_msg = Полученные IP-адреса (Макс. 50)
+geo_filters = Фильтры
+geo_filters_country = Страны
+geo_filters_city = Города

@@ -1,4 +1,3 @@
-// main-menu.ts
 import { InlineKeyboard } from 'grammy'
 import type { Context } from '#root/bot/context.js'
 
