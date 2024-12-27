@@ -31,7 +31,7 @@ feature.command('get', logHandle('command-get'), async (ctx) => {
 })
 
 feature.callbackQuery('ip-lookup', async (ctx) => {
-  const promptMessage = await ctx.reply('Пришлите до 50 IP-адресов одним сообщением.')
+  const promptMessage = await ctx.reply(ctx.t('await_ips'))
   await ctx.answerCallbackQuery()
 
   // Сохраняем ID сообщения для последующего удаления
@@ -44,7 +44,7 @@ feature.on('message:text', async (ctx) => {
   if (ctx.session?.waitingForIps) {
     await ctx.api.deleteMessage(ctx.chat.id, ctx.session.promptMessageId as number)
 
-    const loadingReply = await ctx.reply('⏳ Проверяем IP-адреса...')
+    const loadingReply = await ctx.reply(`⏳ ${ctx.t('checking_ips')}`)
 
     ctx.session.waitingForMessage = true
 
@@ -58,6 +58,7 @@ feature.on('message:text', async (ctx) => {
     ctx.session.waitingForIps = false
 
     const replies = await Promise.all(ips.map(async (ip) => {
+      const currentLocaleCode = await ctx.i18n.getLocale() as 'en' | 'ru'
       const response = await getCountryCode(ip)
       const city = response?.city
       const country = response?.country
@@ -66,13 +67,13 @@ feature.on('message:text', async (ctx) => {
 
       let reply = `<s>${ip}</s>`
       if (country)
-        reply = `${flag} ${country?.iso_code} ${city?.names.ru || ''} <code>${ip}</code>`
+        reply = `${flag} ${country?.iso_code} ${city?.names[currentLocaleCode] ?? ''} <code>${ip}</code>`
 
       return reply
     }))
 
-    const responseMessage = replies.join('\n') || 'IP-адреса не распознаны.'
-    await ctx.api.editMessageText(ctx.chat.id, loadingReply.message_id, `Полученные IP-адреса (Ограничены до 50):\n\n${responseMessage}`, {
+    const responseMessage = replies.join('\n') || ctx.t('geo_error_msg')
+    await ctx.api.editMessageText(ctx.chat.id, loadingReply.message_id, `${ctx.t('geo_result_msg')}:\n\n${responseMessage}`, {
       parse_mode: 'HTML',
       reply_markup: await createSendMoreKeyboard(ctx),
     })

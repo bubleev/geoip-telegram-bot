@@ -24,5 +24,9 @@ back = Back
 # Settings
 settings_language = Language change
 
-## GEO Menu
+## GEO Feature
 send_more = Check more
+await_ips = Send up to 50 IP addresses in a single message
+checking_ips = Checking IP addresses...
+geo_error_msg = Addresses not recognized
+geo_result_msg = Retrieved IP addresses (Max. 50)
